@@ -10,7 +10,7 @@ local lp = Players.LocalPlayer
 
 local KEY_BIND = {
     ["KEY_DoDarkness"] = 5591024574, 
-    ["KEY_DoLuscaa"] = 2793956678
+    ["KEY_DoLuscaa"] = 2793956678   
 }
 
 
