@@ -7,12 +7,6 @@ local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local lp = Players.LocalPlayer
 
---// IDENTIFIER (HWID + USERID)
-local function getIdentifier()
-    local hwid = gethwid and gethwid() or "NO_HWID"
-    return hwid .. ":" .. lp.UserId
-end
-
 --// PLATOBOOST
 local Platoboost = {}
 do
@@ -21,6 +15,7 @@ do
 
     local request = request or http_request or syn_request
     local setClipboard = setclipboard or toclipboard
+    local getHwid = gethwid or function() return lp.UserId end
     local host = "https://api.platoboost.app"
 
     local function genNonce()
@@ -35,8 +30,8 @@ do
         local r = request({
             Url = host .. "/public/start",
             Method = "POST",
-            Body = '{"service":'..service..',"identifier":"'..getIdentifier()..'"}',
-            Headers = {["Content-Type"] = "application/json"}
+            Body = '{"service":'..service..',"identifier":"'..getHwid()..'"}',
+            Headers = {["Content-Type"]="application/json"}
         })
 
         local url = r and r.Body and r.Body:match('"url"%s*:%s*"(.-)"')
@@ -46,11 +41,8 @@ do
     end
 
     function Platoboost.VerifyKey(key)
-        local identifier = getIdentifier()
-
-        -- Primeiro tenta validar (caso já esteja presa ao player)
         local url = host.."/public/whitelist/"..service
-            .."?identifier="..identifier
+            .."?identifier="..getHwid()
             .."&key="..key
 
         if useNonce then
@@ -62,13 +54,12 @@ do
             return true
         end
 
-        -- Se não validou, tenta REDEEM (primeiro uso da key)
         if key:sub(1,4) == "KEY_" then
             local redeem = request({
                 Url = host .. "/public/redeem/" .. service,
                 Method = "POST",
-                Body = '{"identifier":"'..identifier..'","key":"'..key..'"}',
-                Headers = {["Content-Type"] = "application/json"}
+                Body = '{"identifier":"'..getHwid()..'","key":"'..key..'"}',
+                Headers = {["Content-Type"]="application/json"}
             })
 
             if redeem and redeem.StatusCode == 200
