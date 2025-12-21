@@ -183,6 +183,9 @@ function CyberCodersModule.Show(callback)
 
     verify.MouseButton1Click:Connect(function()
         if Platoboost.VerifyKey(box.Text) then
+            mascotText.Text = "Correct key! Congratulations"
+            mascotText.TextColor3 = Color3.fromRGB(0,255,0) -- verde
+            wait(1.2)
             idleRotate:Cancel()
             gui:Destroy()
             callback(true)
