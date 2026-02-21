@@ -1,2 +1,3 @@
 local pl = game.Players.LocalPlayer;
-pl:Kick("Script Off, Sorry");
+pl:Kick("Script Death Ball Off, Sorry");
+
